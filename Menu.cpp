@@ -17,7 +17,7 @@
 //		cin >> option;
 //		switch (option) {
 //		case login:
-//			u.logIn(u);
+//			u.login(u);
 //		case signin:
 //			u.createAccount(u);
 //			break;
@@ -34,8 +34,11 @@
 //{
 //
 //}
-//
-//
-//
-//
-//
+////{
+////
+////}
+////
+////
+////
+////
+////

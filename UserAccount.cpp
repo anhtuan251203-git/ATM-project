@@ -3,12 +3,18 @@
 // constructor
 UserAccount::UserAccount()
 {
-
+    ID = ' ';
+    pin = 0;
+    balance = 0.0;
 }
-
+// setter,getter
 void UserAccount::setID(string _id)
 {
     ID = _id;
+}
+string UserAccount::getID()
+{
+    return ID;
 }
 
 bool UserAccount::login(UserAccount& account)
@@ -17,7 +23,6 @@ bool UserAccount::login(UserAccount& account)
     double inputPin = 0;
     cout << "Enter your ID: ";
     cin >> inputID;
-
     if (inputAccountData(inputID, account)) 
     {
         cout << "Enter your PIN: ";
@@ -25,7 +30,6 @@ bool UserAccount::login(UserAccount& account)
         if (inputPin == account.pin)
         {
             cout << "Login successful!" << endl;
-            inputAccountData(inputID, account);
             return true;
         }
         else 
@@ -37,7 +41,7 @@ bool UserAccount::login(UserAccount& account)
     {
         cout << "Account not found. Please check your ID." << endl;
     }
-
+    inputAccountData(inputID, account);
     return false;
 }
 
@@ -141,14 +145,14 @@ void exit()
 //function to display account information
 void UserAccount::AccountInformation(UserAccount& account)
 {
-        cout << "Account ID: " << account.ID << endl;
-        cout << "Balance: $" << account.balance << endl;
-        cout << "Friendly account: " << endl;
-        for (const string& friendlyID : account.friendlyAccounts)
-        {
-            cout << friendlyID << " ";
-        }
-        cout << endl;
+    cout << "Account ID: " << account.ID << endl;
+    cout << "Balance: $" << account.balance << endl;
+    cout << "Friendly account: " << endl;
+    for (const string& friendlyID : account.friendlyAccounts)
+    {
+        cout << friendlyID << " ";
+    }
+    cout << endl;
 }
 
 //function to withdraw the money
@@ -228,46 +232,138 @@ void UserAccount::withdraw(UserAccount& amount)
 }
 
 //function to deposit the money
-void UserAccount::deposit()
+void UserAccount::deposit(UserAccount& account)
 {
-    
+    cout << "Input the amount to deposit: ";
+    int depAmount;
+    cin >> depAmount;
+    if (depAmount < 0)
+    {
+        cout << "Please input a positive number!" << endl;
+        cin >> depAmount;
+    }
+        balance += depAmount;
+        cout << "Success!";
+        updateFile(account);
 }
 
-//function to tranfer the money to friendly account
+
 void UserAccount::transfer(UserAccount& account)
 {
-    const int option1 = 1;
-    const int option2 = 2;
-    int option;
-    cout << option1 << "Your friendly accounts:";
-    cout << option2 << "other accounts: ";
-    string UserAccount = ID;
-    string FriendlyAccountID;
-    double amount;
-    switch (option)
+    string inputID;
+    string FriendlyID;
+    double amount = 0;
+    cout << "input the ID of the account you want to transfer: " << endl;
+    cin >> inputID;
+    FriendlyID = inputID;
+    if (find(account.friendlyAccounts.begin(), account.friendlyAccounts.end(), inputID) != account.friendlyAccounts.end())
     {
-    case (1):
-    {
-        for (const string& friendlyID : account.friendlyAccounts)
+        int optionToSave;
+        cout << "Do you want to save this new ID to your friend list ?" << endl;
+        cout << "1. Yes" << endl;
+        cout << "2. No" << endl;
+        cin >> optionToSave;
+        switch (optionToSave)
         {
-            cout << friendlyID << " ";
+        case(1):
+        {
+            updateFile(account);
         }
-        cout << "input the friendly account you want to transfer: ";
-        getline(cin, FriendlyAccountID);
-        cout << "input the amount you want to transfer: ";
-        cin >> amount;
-        account.balance -= amount;
-        updateFile(account);
-        // subtract the balance of user
-        inputAccountData(FriendlyAccountID, account);
-        account.balance += amount;
-        updateFile(account);
+        default:
+            break;
+        }
     }
+    else
+    {
+        cout << "input the amount you want to transfer: " << endl;
+        cin >> amount;
+        if (amount > account.balance)
+        {
+            cout << "not enough money!";
+            return;
+        }
+        account.balance -= amount;
+        cout << "transfer sucessfully! " << endl;
+        updateFile(account);
+        inputAccountData(FriendlyID, account);
+        updateFile(account);
+        inputAccountData(inputID, account);
     }
 }
-
+    
 //function to exit the main menu of ATM
 void UserAccount::logOut()
 {
     return;
 }
+
+void UserAccount::MainMenu() {
+    UserAccount u;
+    int option = 0;
+
+    const int login = 1;
+    const int signin = 2;
+    const int exit = 3;
+    do {
+        cout << "ATM" << endl;
+        cout << login << ". Log in" << endl;
+        cout << signin << ". Sign in" << endl;
+        cout << exit << ". Exit" << endl;
+        cout << "Please pick an option: ";
+        cin >> option;
+        switch (option) {
+        case login:
+            if (u.login(u)) {
+                UserMenu();
+            };
+            break;
+        case signin:
+            createAccount(u);
+            break;
+        case exit:
+        default:
+            cout << "Please pick a valid option!!" << endl;
+            break;
+        }
+    } while (option >= login || option <= exit);
+}
+
+void UserAccount::UserMenu() {
+    UserAccount u;
+    int option = 0;
+    const int info = 1;
+    const int withdraw = 2;
+    const int deposit = 3;
+    const int transfer = 4;
+    const int logout = 5;
+    do {
+        cout << "ATM" << endl;
+        cout << info << ". Account info" << endl;
+        cout << withdraw << ". Withdraw" << endl;
+        cout << deposit << ". Deposit" << endl;
+        cout << transfer << ". Transfer" << endl;
+        cout << logout << ". Logout" << endl;
+
+        cout << "Please pick an option: ";
+        cin >> option;
+        switch (option) {
+        case info:
+            u.AccountInformation(u);
+            break;
+        case withdraw:
+            u.withdraw(u);
+            break;
+        case deposit:
+            u.deposit(u);
+            break;
+        case transfer:
+            u.transfer(u);
+        case logout:
+            u.logOut();
+        default:
+            cout << "Please pick a valid option!!" << endl;
+            break;
+        }
+    } while (option >= info || option <= logout);
+}
+

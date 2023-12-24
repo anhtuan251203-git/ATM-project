@@ -17,8 +17,9 @@ private:
 public:
 	// default constructor
 	UserAccount();
-	//setter,getter
+	//setter,getter to test each function
 	void setID(string);
+	string getID();
 	//login
 	bool login(UserAccount& );
 	// function to interact with file:
@@ -34,18 +35,15 @@ public:
 	//function to display account information
 	void AccountInformation(UserAccount& );
 	//function to withdraw the money
-	void withdraw(UserAccount& );
+	void withdraw(UserAccount&);
 	//function to deposit the money
-	void deposit();
+	void deposit(UserAccount&);
 	//function to tranfer the money to friendly account
-	void transfer();
+	void transfer(UserAccount&);
 	//function to exit the main menu of ATM
 	void logOut();
+	//MainMenu
+	void MainMenu();
+	//UserMenu
+	void UserMenu();
 };
-
-//class Menu : public UserAccount
-//{
-//	Menu();
-//	void displayLoginMenu();
-//	void displayAccountMenu();
-//};
