@@ -41,6 +41,7 @@ public:
 	void deposit(UserAccount&);
 	//function to tranfer the money to friendly account
 	void transfer(UserAccount&);
+	//function to determine if the input ID is new ID
 	void addFriendlyAccount(UserAccount& account, string);
 	bool isNewFriendlyAccount(const UserAccount& , const string& );
 	//function to exit the main menu of ATM

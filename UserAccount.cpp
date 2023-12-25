@@ -167,6 +167,7 @@ void UserAccount::withdraw(UserAccount& amount)
         cout << "3. " << opt3 << endl;
         cout << "4. " << opt4 << endl;
         cout << "5. Other " << endl;
+        cout << "6. return to main menu";
         cin >> option;
         switch (option)
         {
