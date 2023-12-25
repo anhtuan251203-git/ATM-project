@@ -17,10 +17,12 @@ private:
 	double balance;
 public:
 	// default constructor
+	UserAccount(string, double, vector<string>, double );
 	UserAccount();
 	//setter,getter to test each function
 	void setID(string);
 	string getID();
+	void setBalance(double);
 	//login
 	bool login(UserAccount&);
 	// function to interact with file:
@@ -40,7 +42,7 @@ public:
 	//function to deposit the money
 	void deposit(UserAccount&);
 	//function to tranfer the money to friendly account
-	void transfer(UserAccount&);
+	void transfer(UserAccount&, UserAccount&);
 	//function to determine if the input ID is new ID
 	void addFriendlyAccount(UserAccount& account, string);
 	bool isNewFriendlyAccount(const UserAccount& , const string& );

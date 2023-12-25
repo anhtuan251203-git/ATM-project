@@ -1,0 +1,40 @@
+Contribution to the project:
+1. Nguyen Viet Anh Tuan, Troy ID:1624788 
+Design, code and debug: 
+// the header file UserAccount.h
+// setter, getter:
+* setID, getID
+//function to login
+* login
+// function to interact with file
+* inputAccountData
+* createAccountFile
+* updateFile
+// function to generate random ID
+* generateRandomID
+//function to display account information
+* AccountInformation
+//function to withdraw the money
+* withdraw
+//function to transfer the money
+* transfer
+2. Nguyen Tran Minh, Troy ID: 1624714
+Design, code and debug: 
+// main.cpp
+// constructor:
+* constructor
+// display login and create account menu
+* MainMenu
+// Display the user menu when logged in
+* UserMenu
+
+3. Do Nhat Minh, Troy ID: 1624742 
+Design, code and debug: 
+// function to create a new account with random ID
+* createAccount
+// function to exit the login menu
+* exit
+// function to deposit the money
+* deposit
+// function to go back to the login menu
+* logOut 

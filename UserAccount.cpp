@@ -1,22 +1,33 @@
 #include "UserAccount.h"
 
 // constructor
+UserAccount::UserAccount(string _id, double _pin, vector<string> _friendlyAccounts,double _balance)
+{
+    ID = _id;
+    pin = _pin;
+    balance = _balance;
+    friendlyAccounts = _friendlyAccounts;
+}
 UserAccount::UserAccount()
 {
-    ID =  "";
-    pin = 0;
-    balance = 0.0;
+
 }
+
 // setter,getter
 void UserAccount::setID(string _id)
 {
     ID = _id;
+}
+void UserAccount::setBalance(double _balance)
+{
+    balance = _balance;
 }
 string UserAccount::getID()
 {
     return ID;
 }
 
+//function to login
 bool UserAccount::login(UserAccount& account)
 {
     string inputID;
@@ -46,6 +57,7 @@ bool UserAccount::login(UserAccount& account)
 }
 
 // function to interact with file
+//function to read from file and input info of account
 bool UserAccount::inputAccountData(const string& _id, UserAccount& account)
 {
     setID(_id);
@@ -65,6 +77,7 @@ bool UserAccount::inputAccountData(const string& _id, UserAccount& account)
     return true;
 }
 
+//function to create an account with random ID
 void UserAccount::createAccountFile(const UserAccount& account)
 {
     ofstream file(account.ID + ".txt");
@@ -85,6 +98,7 @@ void UserAccount::createAccountFile(const UserAccount& account)
     file.close();
 }
 
+//function to update the info to the file
 void UserAccount::updateFile(const string& _id, const UserAccount& account) 
 {
     setID(_id);
@@ -136,7 +150,7 @@ void UserAccount::createAccount(UserAccount& account)
 }
 
 // function to exit the login menu
-void exit()
+void UserAccount::exit()
 {
     return;
 }
@@ -257,29 +271,36 @@ void UserAccount::deposit(UserAccount& account)
     updateFile(ID, account);
 }
 
-
-void UserAccount::transfer(UserAccount& account)
+//function to transfer money
+void UserAccount::transfer(UserAccount& source, UserAccount& Destination)
 {
     string inputID;
     double amount = 0;
-    cout << "input the ID of the account you want to transfer: " << endl;
+    cout << "input the ID of the account you want to transfer(8 characters): " << endl;
     cin >> inputID;
-    addFriendlyAccount(account, inputID);
+    while(inputID.length() != 8)
+    {
+        cout << "invalid ID!";
+        cout << "input the ID of the account you want to transfer(8 characters): " << endl;
+        cin >> inputID;
+    }
+    addFriendlyAccount(source, inputID);
     cout << "input the amount you want to transfer: " << endl;
     cin >> amount;
-    if (amount > account.balance)
+    if (amount > source.balance)
         {
             cout << "not enough money!";
             return;
         }
-    account.balance -= amount;
-    updateFile(ID, account);
-    inputAccountData(inputID, account);
-    updateFile(inputID, account);
+    source.balance -= amount;
+    updateFile(ID, source);
+    Destination.balance += amount;
+    updateFile(inputID, Destination);
+    //updateFile(inputID, account);
     cout << "transfer sucessfully! " << endl;
 }
 
-
+// function to determine if the input ID is new ID
 bool UserAccount::isNewFriendlyAccount(const UserAccount& user, const string& newFriendlyID) {
     for (const string& friendlyID : user.friendlyAccounts) {
         if (friendlyID == newFriendlyID) {
@@ -289,7 +310,6 @@ bool UserAccount::isNewFriendlyAccount(const UserAccount& user, const string& ne
     }
     return true;
 }
-
 void UserAccount::addFriendlyAccount(UserAccount& account, string newFriendlyID) 
 {
     if (isNewFriendlyAccount(account, newFriendlyID)) 
@@ -301,7 +321,6 @@ void UserAccount::addFriendlyAccount(UserAccount& account, string newFriendlyID)
         if (saveChoice == 'Y' || saveChoice == 'y') 
         {
             account.friendlyAccounts.push_back(newFriendlyID);
-            updateFile(ID, account);
             cout << "Friendly account added successfully!" << endl;
         }
         else 
@@ -312,13 +331,15 @@ void UserAccount::addFriendlyAccount(UserAccount& account, string newFriendlyID)
 }
 
 
-//function to exit the main menu of ATM
+// function to go back to the login menu
 void UserAccount::logOut()
 {
     UserAccount u;
     u.MainMenu();
 }
 
+//function to display the menu
+// display login and create account menu
 void UserAccount::MainMenu() {
     UserAccount u;
     int option = 0;
@@ -349,9 +370,10 @@ void UserAccount::MainMenu() {
         }
     } while (option > 0 || option < 4);
 }
-
+// Display the user menu when logged in
 void UserAccount::UserMenu(UserAccount& account) {
     UserAccount u;
+    UserAccount v;
     int option = 0;
     const int info = 1;
     const int withdraw = 2;
@@ -379,7 +401,8 @@ void UserAccount::UserMenu(UserAccount& account) {
             u.deposit(account);
             break;
         case transfer:
-            u.transfer(account);
+            u.transfer(account,v);
+            break;
         case logout:
             u.logOut();
         default:
