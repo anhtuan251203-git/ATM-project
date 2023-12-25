@@ -23,7 +23,7 @@ bool UserAccount::login(UserAccount& account)
     double inputPin = 0;
     cout << "Enter your ID: ";
     cin >> inputID;
-    if (inputAccountData(inputID, account)) 
+    if (inputAccountData(inputID, account))
     {
         cout << "Enter your PIN: ";
         cin >> inputPin;
@@ -32,12 +32,12 @@ bool UserAccount::login(UserAccount& account)
             cout << "Login successful!" << endl;
             return true;
         }
-        else 
+        else
         {
             cout << "Incorrect PIN. Please try again." << endl;
         }
     }
-    else 
+    else
     {
         cout << "Account not found. Please check your ID." << endl;
     }
@@ -85,18 +85,15 @@ void UserAccount::createAccountFile(const UserAccount& account)
     file.close();
 }
 
-void UserAccount::updateFile(UserAccount& account)
-{
-    ofstream file;
-    file.open(account.ID + ".txt");
-    file << account.pin << account.balance;
-    string friendlyAccounts;
-    while (file << friendlyAccounts)
-    {
-        account.friendlyAccounts.push_back(friendlyAccounts);
+void UserAccount::updateFile(const UserAccount& account) {
+    ofstream file(account.ID + ".txt");
+    file << account.pin << " " << account.balance << endl;
+    for (const string& friendlyID : account.friendlyAccounts) {
+        file << " " << friendlyID;
     }
     file.close();
 }
+
 
 // function to generate random ID
 string UserAccount::generateRandomID()
@@ -167,7 +164,7 @@ void UserAccount::withdraw(UserAccount& amount)
         cout << "2. " << opt2 << endl;
         cout << "3. " << opt3 << endl;
         cout << "4. " << opt4 << endl;
-        cout << "5. Other "  << endl;
+        cout << "5. Other " << endl;
         cin >> option;
         switch (option)
         {
@@ -179,7 +176,9 @@ void UserAccount::withdraw(UserAccount& amount)
                 break;
             }
             else
-            amount.balance -= 10;
+                amount.balance -= 10;
+            cout << "withdraw sucessfully!";
+            break;
         }
         case(2):
         {
@@ -189,7 +188,9 @@ void UserAccount::withdraw(UserAccount& amount)
                 break;
             }
             else
-            amount.balance -= 20;
+                amount.balance -= 20;
+            cout << "withdraw sucessfully!";
+            break;
         }
         case(3):
         {
@@ -199,7 +200,9 @@ void UserAccount::withdraw(UserAccount& amount)
                 break;
             }
             else
-            amount.balance -= 50;
+                amount.balance -= 50;
+            cout << "withdraw sucessfully!";
+            break;
         }
         case(4):
         {
@@ -209,7 +212,9 @@ void UserAccount::withdraw(UserAccount& amount)
                 break;
             }
             else
-            amount.balance -= 100;
+                amount.balance -= 100;
+            cout << "withdraw sucessfully!";
+            break;
         }
         case(5):
         {
@@ -224,10 +229,12 @@ void UserAccount::withdraw(UserAccount& amount)
             else
             {
                 amount.balance -= otherAmount;
+                cout << "withdraw sucessfully!";
+                break;
             }
         }
         }
-            updateFile(amount);
+        updateFile(amount);
     } while (option > 0 && option <= 5);
 }
 
@@ -235,27 +242,25 @@ void UserAccount::withdraw(UserAccount& amount)
 void UserAccount::deposit(UserAccount& account)
 {
     cout << "Input the amount to deposit: ";
-    int depAmount;
+    double depAmount;
     cin >> depAmount;
     if (depAmount < 0)
     {
         cout << "Please input a positive number!" << endl;
         cin >> depAmount;
     }
-        balance += depAmount;
-        cout << "Success!";
-        updateFile(account);
+    account.balance += depAmount;
+    cout << "Success!";
+    updateFile(account);
 }
 
 
 void UserAccount::transfer(UserAccount& account)
 {
     string inputID;
-    string FriendlyID;
     double amount = 0;
     cout << "input the ID of the account you want to transfer: " << endl;
     cin >> inputID;
-    FriendlyID = inputID;
     if (find(account.friendlyAccounts.begin(), account.friendlyAccounts.end(), inputID) != account.friendlyAccounts.end())
     {
         int optionToSave;
@@ -263,14 +268,9 @@ void UserAccount::transfer(UserAccount& account)
         cout << "1. Yes" << endl;
         cout << "2. No" << endl;
         cin >> optionToSave;
-        switch (optionToSave)
+        if (optionToSave != 1)
         {
-        case(1):
-        {
-            updateFile(account);
-        }
-        default:
-            break;
+            cout << "unsave";
         }
     }
     else
@@ -285,12 +285,11 @@ void UserAccount::transfer(UserAccount& account)
         account.balance -= amount;
         cout << "transfer sucessfully! " << endl;
         updateFile(account);
-        inputAccountData(FriendlyID, account);
-        updateFile(account);
         inputAccountData(inputID, account);
+        updateFile(account);
     }
 }
-    
+
 //function to exit the main menu of ATM
 void UserAccount::logOut()
 {
@@ -314,7 +313,7 @@ void UserAccount::MainMenu() {
         switch (option) {
         case login:
             if (u.login(u)) {
-                UserMenu();
+                UserMenu(u);
             };
             break;
         case signin:
@@ -325,10 +324,10 @@ void UserAccount::MainMenu() {
             cout << "Please pick a valid option!!" << endl;
             break;
         }
-    } while (option >= login || option <= exit);
+    } while (option > 0 || option < 4);
 }
 
-void UserAccount::UserMenu() {
+void UserAccount::UserMenu(UserAccount& account) {
     UserAccount u;
     int option = 0;
     const int info = 1;
@@ -348,16 +347,16 @@ void UserAccount::UserMenu() {
         cin >> option;
         switch (option) {
         case info:
-            u.AccountInformation(u);
+            u.AccountInformation(account);
             break;
         case withdraw:
-            u.withdraw(u);
+            u.withdraw(account);
             break;
         case deposit:
-            u.deposit(u);
+            u.deposit(account);
             break;
         case transfer:
-            u.transfer(u);
+            u.transfer(account);
         case logout:
             u.logOut();
         default:
@@ -366,4 +365,3 @@ void UserAccount::UserMenu() {
         }
     } while (option >= info || option <= logout);
 }
-

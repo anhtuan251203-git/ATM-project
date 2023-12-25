@@ -21,19 +21,19 @@ public:
 	void setID(string);
 	string getID();
 	//login
-	bool login(UserAccount& );
+	bool login(UserAccount&);
 	// function to interact with file:
-	bool inputAccountData(const string& , UserAccount& );
-	void createAccountFile(const UserAccount& );
-	void updateFile(UserAccount& );
+	bool inputAccountData(const string&, UserAccount&);
+	void createAccountFile(const UserAccount&);
+	void updateFile(const UserAccount&);
 	// function to generate random id
 	string generateRandomID();
 	//function to create new account
-	void createAccount(UserAccount& );
+	void createAccount(UserAccount&);
 	//function to exit the login menu of the ATM
 	void exit();
 	//function to display account information
-	void AccountInformation(UserAccount& );
+	void AccountInformation(UserAccount&);
 	//function to withdraw the money
 	void withdraw(UserAccount&);
 	//function to deposit the money
@@ -45,5 +45,5 @@ public:
 	//MainMenu
 	void MainMenu();
 	//UserMenu
-	void UserMenu();
+	void UserMenu(UserAccount&);
 };

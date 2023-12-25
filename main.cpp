@@ -2,7 +2,8 @@
 
 int main() 
 {
-	UserAccount u;
-	//u.MainMenu();
+	UserAccount currentUser;
+	currentUser.MainMenu();
 	return 0;
 }
+
