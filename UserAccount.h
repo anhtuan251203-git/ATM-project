@@ -26,7 +26,7 @@ public:
 	// function to interact with file:
 	bool inputAccountData(const string&, UserAccount&);
 	void createAccountFile(const UserAccount&);
-	void updateFile(const UserAccount&);
+	void updateFile(const string&, const UserAccount&);
 	// function to generate random id
 	string generateRandomID();
 	//function to create new account

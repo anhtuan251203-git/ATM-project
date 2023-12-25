@@ -3,7 +3,7 @@
 // constructor
 UserAccount::UserAccount()
 {
-    ID = ' ';
+    ID =  "";
     pin = 0;
     balance = 0.0;
 }
@@ -85,7 +85,9 @@ void UserAccount::createAccountFile(const UserAccount& account)
     file.close();
 }
 
-void UserAccount::updateFile(const UserAccount& account) {
+void UserAccount::updateFile(const string& _id, const UserAccount& account) 
+{
+    setID(_id);
     ofstream file(account.ID + ".txt");
     file << account.pin << " " << account.balance << endl;
     for (const string& friendlyID : account.friendlyAccounts) {
@@ -234,7 +236,7 @@ void UserAccount::withdraw(UserAccount& amount)
             }
         }
         }
-        updateFile(amount);
+        updateFile(ID, amount);
     } while (option > 0 && option <= 5);
 }
 
@@ -251,7 +253,7 @@ void UserAccount::deposit(UserAccount& account)
     }
     account.balance += depAmount;
     cout << "Success!";
-    updateFile(account);
+    updateFile(ID, account);
 }
 
 
@@ -270,10 +272,10 @@ void UserAccount::transfer(UserAccount& account)
             return;
         }
     account.balance -= amount;
-    cout << "transfer sucessfully! " << endl;
-    updateFile(account);
+    updateFile(ID, account);
     inputAccountData(inputID, account);
-    updateFile(account);
+    updateFile(inputID, account);
+    cout << "transfer sucessfully! " << endl;
 }
 
 
@@ -287,7 +289,7 @@ bool UserAccount::isNewFriendlyAccount(const UserAccount& user, const string& ne
     return true;
 }
 
-void UserAccount::addFriendlyAccount(UserAccount& account, string newFriendlyID) \
+void UserAccount::addFriendlyAccount(UserAccount& account, string newFriendlyID) 
 {
     if (isNewFriendlyAccount(account, newFriendlyID)) 
     {
@@ -298,7 +300,7 @@ void UserAccount::addFriendlyAccount(UserAccount& account, string newFriendlyID)
         if (saveChoice == 'Y' || saveChoice == 'y') 
         {
             account.friendlyAccounts.push_back(newFriendlyID);
-            updateFile(account);
+            updateFile(ID, account);
             cout << "Friendly account added successfully!" << endl;
         }
         else 
