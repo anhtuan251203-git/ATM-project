@@ -261,39 +261,59 @@ void UserAccount::transfer(UserAccount& account)
     double amount = 0;
     cout << "input the ID of the account you want to transfer: " << endl;
     cin >> inputID;
-    if (find(account.friendlyAccounts.begin(), account.friendlyAccounts.end(), inputID) != account.friendlyAccounts.end())
-    {
-        int optionToSave;
-        cout << "Do you want to save this new ID to your friend list ?" << endl;
-        cout << "1. Yes" << endl;
-        cout << "2. No" << endl;
-        cin >> optionToSave;
-        if (optionToSave != 1)
-        {
-            cout << "unsave";
-        }
-    }
-    else
-    {
-        cout << "input the amount you want to transfer: " << endl;
-        cin >> amount;
-        if (amount > account.balance)
+    addFriendlyAccount(account, inputID);
+    cout << "input the amount you want to transfer: " << endl;
+    cin >> amount;
+    if (amount > account.balance)
         {
             cout << "not enough money!";
             return;
         }
-        account.balance -= amount;
-        cout << "transfer sucessfully! " << endl;
-        updateFile(account);
-        inputAccountData(inputID, account);
-        updateFile(account);
+    account.balance -= amount;
+    cout << "transfer sucessfully! " << endl;
+    updateFile(account);
+    inputAccountData(inputID, account);
+    updateFile(account);
+}
+
+
+bool UserAccount::isNewFriendlyAccount(const UserAccount& user, const string& newFriendlyID) {
+    for (const string& friendlyID : user.friendlyAccounts) {
+        if (friendlyID == newFriendlyID) {
+            cout << "This account is already in your friendly list." << endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+void UserAccount::addFriendlyAccount(UserAccount& account, string newFriendlyID) \
+{
+    if (isNewFriendlyAccount(account, newFriendlyID)) 
+    {
+        char saveChoice;
+        cout << "Do you want to save this account as a friendly account? (Y/N): ";
+        cin >> saveChoice;
+
+        if (saveChoice == 'Y' || saveChoice == 'y') 
+        {
+            account.friendlyAccounts.push_back(newFriendlyID);
+            updateFile(account);
+            cout << "Friendly account added successfully!" << endl;
+        }
+        else 
+        {
+            cout << "Friendly account not saved." << endl;
+        }
     }
 }
+
 
 //function to exit the main menu of ATM
 void UserAccount::logOut()
 {
-    return;
+    UserAccount u;
+    u.MainMenu();
 }
 
 void UserAccount::MainMenu() {

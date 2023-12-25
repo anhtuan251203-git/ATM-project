@@ -5,6 +5,7 @@
 #include<fstream>
 #include<ctime>
 #include<cstdlib>
+#include<algorithm>
 using namespace std;
 
 class UserAccount
@@ -40,6 +41,8 @@ public:
 	void deposit(UserAccount&);
 	//function to tranfer the money to friendly account
 	void transfer(UserAccount&);
+	void addFriendlyAccount(UserAccount& account, string);
+	bool isNewFriendlyAccount(const UserAccount& , const string& );
 	//function to exit the main menu of ATM
 	void logOut();
 	//MainMenu
